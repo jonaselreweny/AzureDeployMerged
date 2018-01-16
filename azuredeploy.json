@@ -26,6 +26,36 @@
             "metadata": {
                 "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
                 }
+        },
+        "adminLogin": {
+            "type": "string",
+            "minLength": 1
+        },
+        "adminPassword": {
+            "type": "securestring"
+        },
+        "mydatabaseEdition": {
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+              "Standard",
+              "Premium"
+            ]
+        },
+        "mydatabaseTier": {
+            "allowedValues": [
+                "S0",
+                "S1",
+                "S2",
+                "P1",
+                "P2",
+                "P3"
+            ],
+            "defaultValue": "S1",
+            "metadata": {
+              "description": "Describes the performance level for Edition"
+            },
+            "type": "string"
         }
     },
     "variables": {
@@ -33,8 +63,14 @@
         "config_web_name": "web",
         "myappserviceplanName": "[concat('ontimeAppSvc', uniqueString(resourceGroup().id))]", 
         "_artifactsLocation": "https://armtempstore.blob.core.windows.net",
-        "mywebdeploypackageFolder": "resources", 
-        "mywebdeploypackageFileName": "package.zip"
+        "myresourceFolder": "resources", 
+        "mywebdeploypackageFileName": "package.zip",
+        "mybacpacFileName": "mydatabase.bacpac",
+        "mysqlserverName": "[concat('ontimesqlsrv', uniqueString(resourceGroup().id))]",
+        "mydatabaseCollation": "SQL_Latin1_General_CP1_CI_AS",
+        "_artifactsLocationSasToken": "?st=2017-09-06T00%3A22%3A00Z&se=2020-12-07T00%3A22%3A00Z&sp=r&sv=2017-04-17&sr=c&sig=lRfB8y5xO8oLHb8mpuqTSn3ME3rH%2FqRj5vsP6oXivIU%3D",
+        "storageKeyType": "SharedAccessKey",
+        "mydatabaseName": "[concat('ontimedb', uniqueString(resourceGroup().id))]"  
     },
     "resources": [
         {
@@ -83,7 +119,7 @@
                 "displayName": "myWebDeploy"
                 },
                 "properties": {
-                    "packageUri": "[concat(variables('_artifactsLocation'), '/', variables('mywebdeploypackageFolder'), '/', variables('mywebdeploypackageFileName'))]",
+                    "packageUri": "[concat(variables('_artifactsLocation'), '/', variables('myresourceFolder'), '/', variables('mywebdeploypackageFileName'))]",
                     "dbType": "None",
                     "connectionString": "",
                     "setParameters": {
@@ -111,7 +147,75 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/sites', variables('mywebappName'))]"
             ]
-        }
+        },
+        {
+            "name": "[variables('mysqlserverName')]",
+            "type": "Microsoft.Sql/servers",
+            "location": "[parameters('siteLocation')]",
+            "apiVersion": "2014-04-01-preview",
+            "dependsOn": [],
+            "tags": {
+              "displayName": "myserver"
+            },
+            "properties": {
+              "administratorLogin": "[parameters('adminLogin')]",
+              "administratorLoginPassword": "[parameters('adminPassword')]"
+            },
+            "resources": [
+              {
+                "name": "AllowAllWindowsAzureIps",
+                "type": "firewallrules",
+                "location": "[parameters('siteLocation')]",
+                "apiVersion": "2014-04-01-preview",            
+                "dependsOn": [
+                  "[resourceId('Microsoft.Sql/servers', variables('mysqlserverName'))]"
+                ],
+                "properties": {
+                  "startIpAddress": "0.0.0.0",
+                  "endIpAddress": "0.0.0.0"
+                }
+              },
+              {
+                "name": "[variables('mydatabaseName')]",
+                "type": "databases",
+                "location": "[parameters('siteLocation')]",
+                "apiVersion": "2014-04-01-preview",
+                "dependsOn": [
+                  "[resourceId('Microsoft.Sql/servers', variables('mysqlserverName'))]"
+                ],
+                "tags": {
+                  "displayName": "mydatabase"
+                },
+                "properties": {
+                  "collation": "[variables('mydatabaseCollation')]",
+                  "edition": "[parameters('mydatabaseEdition')]",
+                  "maxSizeBytes": "1073741824",
+                  "requestedServiceObjectiveName": "[parameters('mydatabaseTier')]"
+                },
+                "resources": [
+                  {
+                    "name": "myimport",
+                    "type": "extensions",
+                    "apiVersion": "2014-04-01-preview",
+                    "dependsOn": [
+                      "[resourceId('Microsoft.Sql/servers/databases', split(concat(variables('mysqlserverName'), '/', variables('mydatabaseName')), '/')[0], split(concat(variables('mysqlserverName'), '/', variables('mydatabaseName')), '/')[1])]"
+                    ],
+                    "tags": {
+                      "displayName": "myimport"
+                    },
+                    "properties": {
+                      "administratorLogin": "[parameters('adminLogin')]",
+                      "administratorLoginPassword": "[parameters('adminPassword')]",
+                      "operationMode": "Import",
+                      "storageKey": "[variables('_artifactsLocationSasToken')]",
+                      "storageKeyType": "[variables('storageKeyType')]",
+                      "storageUri": "[concat(variables('_artifactsLocation'), '/', variables('myresourceFolder'), '/', variables('mybacpacFileName'))]"
+                    }
+                  }
+                ]
+              }
+            ]
+          }       
         ],
     "outputs": {}
   }
