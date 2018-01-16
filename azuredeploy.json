@@ -68,7 +68,7 @@
         "mybacpacFileName": "mydatabase.bacpac",
         "mysqlserverName": "[concat('ontimesqlsrv', uniqueString(resourceGroup().id))]",
         "mydatabaseCollation": "SQL_Latin1_General_CP1_CI_AS",
-        "_artifactsLocationSasToken": "?st=2017-09-06T00%3A22%3A00Z&se=2020-12-07T00%3A22%3A00Z&sp=r&sv=2017-04-17&sr=c&sig=lRfB8y5xO8oLHb8mpuqTSn3ME3rH%2FqRj5vsP6oXivIU%3D",
+        "_artifactsLocationSasToken": "?st=2018-01-16T16%3A04%3A00Z&se=2025-01-17T18%3A04%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=XYk1VZVmScUt0otmF4OpzTQXv4ZqPMZcaD4ooYvH6zA%3D",
         "storageKeyType": "SharedAccessKey",
         "mydatabaseName": "[concat('ontimedb', uniqueString(resourceGroup().id))]"  
     },
