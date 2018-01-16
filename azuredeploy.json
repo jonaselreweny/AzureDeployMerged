@@ -120,7 +120,7 @@
                 },
                 "properties": {
                     "packageUri": "[concat(variables('_artifactsLocation'), '/', variables('myresourceFolder'), '/', variables('mywebdeploypackageFileName'))]",
-                    "dbType": "SQL Database",
+                    "dbType": "2",
                     "connectionString": "[concat('Server=', variables('mysqlserverName'), '.database.windows.net;Database=', variables('mydatabaseName'), ';Trusted_Connection=True;')]", 
                     "setParameters": {
                         "IIS Web Application Name": "[variables('mywebappName')]"
