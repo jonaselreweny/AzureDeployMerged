@@ -103,9 +103,17 @@
             "displayName": "myWebApp"
             },
             "properties": {
-            "name": "[variables('mywebappName')]",
-            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('myappserviceplanName'))]",
-            "clientAffinityEnabled": false
+                "name": "[variables('mywebappName')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('myappserviceplanName'))]",
+                "clientAffinityEnabled": false,
+                "siteConfig": {
+                    "connectionStrings": [
+                    {
+                        "name": "OntimeConnString",
+                        "connectionString": "[concat('Server=', variables('mysqlserverName'), '.database.windows.net;Database=', variables('mydatabaseName'), ';Trusted_Connection=True;')"
+                    }
+                    ]
+                }
             },
             "resources": [
             {
