@@ -67,7 +67,7 @@
         "mywebdeploypackageFileName": "package.zip",
         "mybacpacFileName": "mydatabase.bacpac",
         "mysqlserverName": "[concat('ontimesqlsrv', uniqueString(resourceGroup().id))]",
-        "mydatabaseCollation": "SQL_Latin1_General_CP1_CI_AS",
+        "mydatabaseCollation": " ",
         "_artifactsLocationSasToken": "?st=2018-01-16T16%3A04%3A00Z&se=2025-01-17T18%3A04%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=XYk1VZVmScUt0otmF4OpzTQXv4ZqPMZcaD4ooYvH6zA%3D",
         "storageKeyType": "SharedAccessKey",
         "mydatabaseName": "[concat('ontimedb', uniqueString(resourceGroup().id))]"  
@@ -104,7 +104,8 @@
             },
             "properties": {
             "name": "[variables('mywebappName')]",
-            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('myappserviceplanName'))]"
+            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('myappserviceplanName'))]",
+            "clientAffinityEnabled": false
             },
             "resources": [
             {
@@ -140,7 +141,13 @@
             "scale": null,
             "properties": {
                 "remoteDebuggingVersion": "VS2012",
-                "javaVersion": "1.8",
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html"
+                ],
+                "alwaysOn": true,
+                "use32BitWorkerProcess": false,
+                "javaVersion": "1.8.0_111",
                 "javaContainer": "TOMCAT",
                 "javaContainerVersion": "8.5"
             },
