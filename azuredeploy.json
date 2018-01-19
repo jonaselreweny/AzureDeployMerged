@@ -60,14 +60,14 @@
     },
     "variables": {
         "mywebappName": "[concat('ontimeWebApp', uniqueString(resourceGroup().id))]",
-        "config_web_name": "web",
+        "myconfigwebName": "web",
         "myappserviceplanName": "[concat('ontimeAppSvc', uniqueString(resourceGroup().id))]", 
         "_artifactsLocation": "https://armtempstore.blob.core.windows.net",
         "myresourceFolder": "resources", 
         "mywebdeploypackageFileName": "package.zip",
         "mybacpacFileName": "mydatabase.bacpac",
         "mysqlserverName": "[concat('ontimesqlsrv', uniqueString(resourceGroup().id))]",
-        "mydatabaseCollation": "",
+        "mydatabaseCollation": "SQL_Latin1_General_CP1_CI_AS",
         "_artifactsLocationSasToken": "?st=2018-01-16T16%3A04%3A00Z&se=2025-01-17T18%3A04%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=XYk1VZVmScUt0otmF4OpzTQXv4ZqPMZcaD4ooYvH6zA%3D",
         "storageKeyType": "SharedAccessKey",
         "mydatabaseName": "[concat('ontimedb', uniqueString(resourceGroup().id))]",
@@ -142,7 +142,7 @@
         },
         {
             "type": "Microsoft.Web/sites/config",
-            "name": "[concat(variables('mywebappName'), '/', variables('config_web_name'))]",
+            "name": "[concat(variables('mywebappName'), '/', variables('myconfigwebName'))]",
             "apiVersion": "2016-08-01",
             "location": "[parameters('siteLocation')]",
             "tags": {
