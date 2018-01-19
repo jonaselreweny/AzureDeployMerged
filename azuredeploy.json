@@ -110,7 +110,7 @@
                 "siteConfig": {
                     "connectionStrings": [
                     {
-                        "name": "OntimeConnString",
+                        "name": "Ontime",
                         "connectionString": "[variables('myconnstringName')]",
                         "Type": 2
                     }
