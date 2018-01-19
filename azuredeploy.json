@@ -71,7 +71,7 @@
         "_artifactsLocationSasToken": "?st=2018-01-16T16%3A04%3A00Z&se=2025-01-17T18%3A04%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=XYk1VZVmScUt0otmF4OpzTQXv4ZqPMZcaD4ooYvH6zA%3D",
         "storageKeyType": "SharedAccessKey",
         "mydatabaseName": "[concat('ontimedb', uniqueString(resourceGroup().id))]",
-        "myconnstringName": "[concat(variables('mysqlserverName'), '.database.windows.net;Database=')]"
+        "myconnstringName": "[concat('SQLServer=', variables('mysqlserverName'), '.database.windows.net;Database=', variables('mydatabaseName'))]" 
     },
     "resources": [
         {
